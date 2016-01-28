@@ -1,0 +1,10 @@
+{
+    "name": "Sample1",
+    "version": "1.0",
+    "starter": "demo-offline-app",
+    "offline": "offline-login",
+    "dependencies": {
+        "demo-offline-app": "0.0.1",
+        "offline-login": "0.0.1"
+     }
+}

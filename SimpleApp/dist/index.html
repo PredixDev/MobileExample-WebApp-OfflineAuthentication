@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<style>
+		button { width: 200px; height: 34px; margin-top: 15px}
+		body {margin-top: 22px; font-family:Helvetica}
+		div {font-size: 10pt} 
+		</style>
+	</head>
+	<body>
+		<hr>
+		<div>
+		<p id="connectivityState" />
+		</div>
+		<div>
+		<p>This app only serves to demo the offline login functionality.</p>
+		<p>Disconnect your device from the network, then tap Logout to restart the Container to demonstrate logging in offline.</p>
+		<div>
+		<hr>
+		<div><button id="updateButton" onclick="updateOffline()">Update Offline Password</button></div>
+		<div><button id="logoutButton" onclick="logout()">Logout</button></div>
+		<script type="text/javascript">
+		//<![CDATA[
+	
+		// This function standardizes calls to the container
+		function callapi(url, method, data, onComplete) {
+			console.log("callapi: " + url);
+
+			var xmlhttp = new XMLHttpRequest();
+		
+			// handler for when the request returns the response
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+					console.log("Response status: " + xmlhttp.status);
+					console.log("Response payload: " + xmlhttp.responseText);
+					if (onComplete) {
+						onComplete(xmlhttp); 
+					}
+				}
+			};
+
+			var payload = JSON.stringify(data);
+			xmlhttp.open(method, url, true);
+			xmlhttp.setRequestHeader("Content-type","application/json;charset=UTF-8");
+			xmlhttp.send(payload);
+		}
+
+		// Routes console.info and console.error logging to the container.
+		function overrideLogs()
+		{
+		  console.baseInfoLog = console.info
+		  console.info = function(logMessage) {
+			console.baseInfoLog(logMessage)
+		
+			callapi("http://pmapi/log", "PUT", {"level":"info", "log":logMessage});
+		  }
+
+		  console.baseErrorLog = console.error
+		  console.error = function(logMessage) {
+			console.baseErrorLog(logMessage)
+			callapi("http://pmapi/log", "PUT", {"level":"error", "log":logMessage});
+		  }
+		}
+
+		// Uses the Boot service to perform a reset of the entire container
+		// This is the recommended way to logout.
+		function logout(){
+		   console.info("Logging out")
+		   callapi("http://pmapi/boot/restart", "POST", "")
+		}
+	
+		// Uses the Auth service to update the offline password.
+		function updateOffline(){
+			var onComplete = function(xmlhttp) {
+				if (xmlhttp.status != 200) {
+					console.error("Received status code " + xmlhttp.status + " attempting to update offline password")
+					alert("Error updating offline password");
+				}
+			};
+			callapi("http://pmapi/auth/update", "POST", "", onComplete);
+		}
+
+		// display the current connectivity status of the device.
+		// Note, this doesn't actively monitor the status, just checks once.
+		// Monitoring of the connectivity status could be done via a call to the notify service.
+		function getConnectivity(){
+			var onComplete = function(xmlhttp) {
+		
+				var stateUIElement = document.getElementById("connectivityState")
+				if (xmlhttp.status == 200) {
+					// The connectivity status is returned as an array of strings.
+					// For this simple example, we'll just display that whole array			
+					console.info("Current connectivity state: " + xmlhttp.response)
+					stateUIElement.innerText = "Connectivity state: " + xmlhttp.response
+				} else {
+					stateUIElement.innerText = "Error retrieving Connectivity state"
+				}
+			};
+			callapi("http://pmapi/connectivity", "GET", "", onComplete);
+		}
+	
+		// initialization
+		function start(){
+			overrideLogs();
+			getConnectivity();
+		}
+	
+		start();
+	
+		//]]>
+		</script>
+	</body>
+</html>
+

@@ -1,0 +1,96 @@
+<html>
+	<head>
+		<style type="text/css">
+		body {margin-top: 22px; font-family:Helvetica;}
+		div {padding:10 10 0 10;font-size: 10pt;}
+		input {margin:10 0 0 0;}
+		button { width: 145px; height: 34px; margin: 10 10 0 10;}
+		div.inline { float:left; width: 160}
+		.clearBoth { clear:both; }
+		.title {font-size: 12pt;font-weight: bold;}
+		</style>
+	</head>
+	<body>
+		<div class="title">
+		Offline Login
+		</div>
+		<div class="inline">
+		User: 
+		</div>
+		<div id="userName">
+		</div>
+		<div class="inline">
+		Password:
+		</div
+		<div>
+		<input type="password" id="pass">
+		</div>
+		<div>
+		<button id="okButton" onclick='buttonClick()'>OK</button>
+		</div>
+		<script lang='javascript' type="text/javascript">
+		//<![CDATA[
+
+		// variable to hold the page's nonce token
+		// All offline authentication calls use a nonce token for security
+		var token
+
+		// Simple generic function to get a query string parameter
+		function getParameterByName(name) {
+			name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+			var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+			results = regex.exec(location.search);
+			return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+		}
+  
+	    // This function standardizes calls to the container
+		function callapi(url, method, data, onComplete) {
+			console.log("callapi: " + url);
+	
+			var xmlhttp = new XMLHttpRequest();
+			
+			// handler for when the request returns the response
+			xmlhttp.onreadystatechange = function() {
+				if (xmlhttp.readyState == XMLHttpRequest.DONE) {
+					console.log("Response status: " + xmlhttp.status);
+					console.log("Response payload: " + xmlhttp.responseText);
+					if (onComplete) {
+						onComplete(xmlhttp); 
+					}
+				}
+		  	};
+
+			var payload = JSON.stringify(data);
+			xmlhttp.open(method, url, true);
+			xmlhttp.setRequestHeader("Content-type","application/json;charset=UTF-8");
+			xmlhttp.send(payload);
+		}
+	
+
+		function buttonClick(){
+
+			// Call the Auth service to validate the offline password
+			var passInput = document.getElementById('pass');
+			var url =   "http://pmapi/auth/" + token + "/authenticate?p=" + passInput.value
+	
+			var onComplete = function(xmlhttp) {
+				if (xmlhttp.status != 200) {
+					alert("Authentication error. Password incorrect");
+				}
+			}
+			callapi(url, "PUT", "", onComplete)
+		}
+
+		// page initialization
+		function start() {
+			var user = getParameterByName("u")
+			token = getParameterByName("t")
+			var userDiv = document.getElementById('userName');
+			userDiv.innerHTML = user
+		}  
+
+		start()
+		//]]>
+		</script>
+	</body>
+</html>
