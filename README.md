@@ -14,10 +14,10 @@ It covers these key aspects of offline login support:
 It is assumed you already have a Predix Mobile cloud services installation, have installed the Predix Mobile command line tool, and have installed a Predix Mobile iOS Container. To get started, follow this documentation:
 * [Get Started with the Mobile Service and Mobile SDK] (https://www.predix.io/docs#rae4EfJ6) 
 * [Running the Predix Mobile Sample App] (https://www.predix.io/docs#EGUzWwcC)
-* [Creating a Mobile Hello World Webapp] (https://www.predix.io/docs#DrBWuHkl) 
+* [Creating a Mobile Hello World Web App] (https://www.predix.io/docs#DrBWuHkl) 
 
 
-### Step 1 - Webapp setup
+### Step 1 - Web app setup
 
 This repo contains two web apps, and a Predix Mobile app configuration file. The two web apps should be published to your Predix Mobile cloud, and the Predix Mobile app configuration file should be defined using the pm tool.
 
