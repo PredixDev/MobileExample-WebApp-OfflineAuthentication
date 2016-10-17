@@ -4,7 +4,7 @@ This repo contains a Predix Mobile app demonstrating a simple offline login conf
 
 It covers these key aspects of offline login support:
 
-* Webapp setup
+* Web app setup
 * First time offline authentication password setup
 * Authentication offline
 * Management of a users offline password
@@ -19,7 +19,7 @@ It is assumed you already have a Predix Mobile cloud services installation, have
 
 ### Step 1 - Webapp setup
 
-This repo contains two webapps, and a Predix Mobile app configuration file. The two webapps should be published to your Predix Mobile cloud, and the Predix Mobile app configuration file should be defined using the pm tool.
+This repo contains two web apps, and a Predix Mobile app configuration file. The two web apps should be published to your Predix Mobile cloud, and the Predix Mobile app configuration file should be defined using the pm tool.
 
 The script "setup-demo.sh" has been provided to quickly perform these steps for you, if you desire.
 
@@ -29,9 +29,9 @@ This example assumes you have your Predix Mobile iOS Container sample app info.p
 
 With your machine still connected to the internet, run your Predix Mobile container. After the normal online login, you will see the first time setup page for your offline password.
 
-What's happening here is the system has read the configration for this Predix Mobile app, and has identified that an offline login webapp has been configured. Further, it has identified that this system has no offline password configured, so it has initialized the setup step of offline login by calling the web page defined in the offline login webapp's "setup" element.
+What's happening here is the system has read the configration for this Predix Mobile app, and has identified that an offline login web app has been configured. Further, it has identified that this system has no offline password configured, so it has initialized the setup step of offline login by calling the web page defined in the offline login webapp's "setup" element.
 
-At this time, you should enter an initial offline password, and tap OK. The system will then continue onto the main webapp for this demo.
+At this time, you should enter an initial offline password, and tap OK. The system will then continue onto the main web app for this demo.
 
 ### Step 3 - Authentication offline
 
@@ -66,13 +66,13 @@ The app.json file for this example is:
          }
     }
 
-Note "starter" and "offline" entries. The "starter" you may be familiar with from other examples. It defines the main webapp that the system starts after authentication.
+Note "starter" and "offline" entries. The "starter" you may be familiar with from other examples. It defines the main web app that the system starts after authentication.
 
 The "offline" entry specifies the webapp that is responsible for offline authentication.
 
 ### The Offline webapp
 
-The webapp.json file for the offline-login webapp in this example is:
+The webapp.json file for the offline-login web app in this example is:
 
     {
       "name": "offline-login",
@@ -95,7 +95,7 @@ The offline webapp has some unique responsibilities, and requirements:
 
 ## Further understanding
 
-Please review the javascript code in each of the offline-login webapp pages, and in the demo-offline-app. Here you will find examples of not only calling the auth service to support offline login, but also examples of these services:
+Please review the javascript code in each of the offline-login web app pages, and in the demo-offline-app. Here you will find examples of not only calling the auth service to support offline login, but also examples of these services:
 
 * log -- log service is called to send JavaScript console logs to the container's logging system.
 * boot -- boot/research is called for logging out.
